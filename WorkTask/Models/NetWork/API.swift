@@ -49,7 +49,7 @@ class API: ObservableObject {
         task.resume()
     }
     
-    func getPhoto(id: String) {
+    private func getPhoto(id: String) {
         let url = URL(string: "https://api.unsplash.com/photos/" + id)
         var request = URLRequest(url: url!)
         request.httpMethod = "GET"
@@ -76,6 +76,32 @@ class API: ObservableObject {
             result.append(i.title)
         }
         return result
+    }
+    
+    func searchTag(tag: String) {
+        let url = URL(string: "https://api.unsplash.com/topics/" + tag + "/photos")
+        var request = URLRequest(url: url!)
+        request.httpMethod = "GET"
+        request.setValue("Client-ID \(token)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            guard let data = data else { return }
+            do {
+                let res = try JSONDecoder().decode([pinCard].self, from: data)
+//                let kek = String(data: data, encoding: .utf8)
+                
+                self.results = []
+                self.results = res
+//                let arr = []
+//                arr.append(res)
+                print(res)
+                
+//                print(self.results)
+            } catch {
+                print(error)
+            }
+        }
+        task.resume()
     }
 }
 

@@ -35,3 +35,11 @@ struct FindPhoto: Codable {
 struct TagTitles: Codable {
     var title: String
 }
+
+struct TagSearch: Codable {
+//    var id: String
+//    var description: String
+//    var created_at: String
+//    var user: UserCard
+//    var urls: URLs
+}

@@ -72,6 +72,18 @@ class MainViewController: UIViewController, UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty || searchText == "" { searchBar.endEditing(true) }
+        else if searchText == "name" { sortByNames() }
+        else if searchText == "date" { sortByTime() }
+        else if searchText.contains("aaa") { 
+            let start = searchText.index(searchText.startIndex, offsetBy: 0)
+            let end = searchText.index(searchText.endIndex, offsetBy: -3)
+            let range = start..<end
+
+            let mySubstring = searchText[range]
+            findByTag(tag: String(mySubstring))
+        }
+        
+        print(searchText)
         
     }
     
@@ -80,7 +92,6 @@ class MainViewController: UIViewController, UISearchBarDelegate {
         let info = API.shared
         
         var cardCounter = 0
-        print("Zhopka", info.results)
         
         for i in info.results {
             let photo = PhotoView(photo: i.urls.small, creationDate: i.created_at!, name: i.user.name, tags: info.getTags(number: cardCounter))
@@ -109,6 +120,41 @@ class MainViewController: UIViewController, UISearchBarDelegate {
             currentViews.append(photo)
         }
         
+    }
+    
+    private func sortByNames() {
+        for i in currentViews {
+            i.isHidden = true
+        }
+        currentViews = []
+        
+        API.shared.results.sort { $0.user.name < $1.user.name }
+        
+        addViews()
+    }
+    
+    private func sortByTime() {
+        for i in currentViews {
+            i.isHidden = true
+        }
+        currentViews = []
+        
+        let dateFormatter = ISO8601DateFormatter()
+        
+        API.shared.results.sort { dateFormatter.date(from:($0.created_at!))! < dateFormatter.date(from:($1.created_at!))! }
+        
+        addViews()
+    }
+    
+    private func findByTag(tag: String) {
+        API.shared.searchTag(tag: tag)
+        
+        for i in currentViews {
+            i.isHidden = true
+        }
+        currentViews = []
+        
+        addViews()
     }
     
     @objc func handleGesture(gesture: UITapGestureRecognizer) -> Void {
