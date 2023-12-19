@@ -12,7 +12,7 @@ import Alamofire
 class MainViewPresenter {
         
     func getPhotos() -> [[String]] {
-        return [["https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg"],
+        return [["https://images.unsplash.com/photo-1682686581797-21ec383ead02?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NDI0MjN8MXwxfHNlYXJjaHwxfHxmbG93ZXJzfGVufDB8fHx8MTcwMjkzMTg4OXww&ixlib=rb-4.0.3&q=80&w=400"],
                 ["29.10.2010"], ["Just for test"], ["#test", "#check"]]
     }
     

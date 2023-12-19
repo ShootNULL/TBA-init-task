@@ -43,7 +43,7 @@ class PhotoView: UIView {
     }
     
     func setUpPhoto() {
-        imageView.load(url: URL(string: "https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg")!)
+        imageView.load(url: URL(string: photo)!)
         
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -67,13 +67,12 @@ class PhotoView: UIView {
 //        textField.isEnabled = false
         
         textField.text = creationDate
-        textField.text = textField.text! + "\n" + name
+        textField.text = textField.text! + "\n By " + name + ", TAGS: "
         for i in tags {
             textField.text = textField.text! + " " + i
         }
-        textField.font = .systemFont(ofSize: 14, weight: .bold)
+        textField.font = .systemFont(ofSize: 12, weight: .bold)
         textField.textColor = .systemBackground
-//        textField.text = "URAAAA"
         textField.backgroundColor = .clear
         textField.isEditable = false
         textField.isScrollEnabled = false

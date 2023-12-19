@@ -8,15 +8,17 @@
 import Foundation
 import UIKit
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, UISearchBarDelegate {
     
     private let presenter = MainViewPresenter()
     
     private let scrollView = UIScrollView()
+    private let searchBar = UISearchBar()
     
-    private var fullScreenSwitcher = false
+    private var currentViews = [UIView]()
     
     override func viewDidLoad() {
+
         setUp()
     }
     
@@ -24,6 +26,8 @@ class MainViewController: UIViewController {
         view.backgroundColor = .white
         
         setUpScrollView()
+        addSearch()
+        
         addViews()
         
     }
@@ -49,19 +53,44 @@ class MainViewController: UIViewController {
         
     }
     
+    func addSearch() {
+        searchBar.delegate = self
+        
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        let searchBarConstraints = [
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
+            searchBar.rightAnchor.constraint(equalTo: view.rightAnchor),
+            searchBar.heightAnchor.constraint(equalToConstant: 40)
+//            searchBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ]
+        
+        view.addSubview(searchBar)
+        NSLayoutConstraint.activate(searchBarConstraints)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty || searchText == "" { searchBar.endEditing(true) }
+        
+    }
+    
     private func addViews() {
         
-        let info = presenter.getPhotos()
+        let info = API.shared
         
-        for i in 0...10 {
-            let photo = PhotoView(photo: info[0][0], creationDate: info[1][0], name: info[2][0], tags: info[3])
+        var cardCounter = 0
+        print("Zhopka", info.results)
+        
+        for i in info.results {
+            let photo = PhotoView(photo: i.urls.small, creationDate: i.created_at!, name: i.user.name, tags: info.getTags(number: cardCounter))
             
             photo.translatesAutoresizingMaskIntoConstraints = false
             
             let photoConstraints = [
                 photo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
                 photo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
-                photo.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: CGFloat(20 + (i * 220))),
+                photo.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: CGFloat(40 + (cardCounter * 220))),
                 photo.heightAnchor.constraint(equalToConstant: 200)
             ]
             
@@ -71,9 +100,13 @@ class MainViewController: UIViewController {
             let tap = UITapGestureRecognizer(target: self, action: #selector(handleGesture))
             photo.addGestureRecognizer(tap)
             
-            if i * 220 + 20 > Int(self.view.frame.height) {
-                scrollView.contentSize = CGSize(width: Int(self.view.frame.width), height: i * 220 + 20)
+            if cardCounter * 220 + 20 > Int(self.view.frame.height) {
+                scrollView.contentSize = CGSize(width: Int(self.view.frame.width), height: cardCounter * 240 + 20)
             }
+            
+            cardCounter += 1
+            
+            currentViews.append(photo)
         }
         
     }
