@@ -69,13 +69,20 @@ class API: ObservableObject {
     }
     
     func getTags(number: Int) -> [String] {
-        if self.tags.count == 0 { return [] }
+        
+//        print(self.tags[0])
+        
+        if self.tags.count < number - 2 { return [] }
+        print(self.tags.count)
+        print(self.tags[number], number)
         
         var result: [String] = []
         for i in self.tags[number].tags {
             result.append(i.title)
         }
         return result
+        
+        
     }
     
     func searchTag(tag: String) {
